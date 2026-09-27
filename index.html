@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>田中邦朋</title>
+  <link rel="icon" href="kuni.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #f7f4ec;
+      --size: min(13vh, 22vw);
+      --gap: 0.4em;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      height: 100vh;
+      height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    /* 上段(田中)・中央(邦)・下段(朋)の3行。中央行が常に画面の真ん中に来る */
+    .name {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr auto 1fr;
+      justify-items: center;
+    }
+
+    .family, .given {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: "Zen Old Mincho", "Yu Mincho", serif;
+      font-weight: 500;
+      font-size: var(--size);
+      line-height: 1;
+    }
+
+    .family, .given { gap: var(--gap); }
+    .family { justify-content: flex-end; padding-bottom: var(--gap); }
+    .given  { justify-content: flex-start; padding-top: var(--gap); }
+
+    .family span, .given span {
+      display: block;
+      opacity: 0;
+    }
+
+
+    .kuni {
+      width: var(--size);
+      height: var(--size);
+      display: block;
+    }
+
+    .kuni path {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 6.348;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .is-drawing .kuni path {
+      animation: draw 2.6s cubic-bezier(.45, .05, .35, 1) forwards;
+    }
+
+    .is-drawing .family span,
+    .is-drawing .given span {
+      animation: appear 1.2s ease-out forwards;
+      animation-delay: 2.8s;
+    }
+
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .is-drawing .kuni path,
+      .is-drawing .family span,
+      .is-drawing .given span {
+        animation-duration: 0.01s;
+        animation-delay: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="name" aria-label="田中邦朋">
+    <span class="family" aria-hidden="true">
+      <span>田</span>
+      <span>中</span>
+    </span>
+    <svg class="kuni" viewBox="78 78 100 100" aria-hidden="true">
+      <path d="M 83.039016,128.1006 C 81.429164,114.31344 149.6254,96.790229 127.94139,82.111807 110.00893,69.9729 101.05919,179.31402 83.043129,169.24883 c -9.116713,-5.09332 16.771345,-35.2483 42.747101,-53.84233 18.12125,-12.97157 38.68606,-22.094673 45.04423,-11.38168 6.67773,12.26311 -18.53511,18.91052 -16.941,16.19876 2.45826,-3.66053 20.957,9.04163 20.93256,20.62556 -0.029,13.74168 -9.48574,19.5488 -22.45239,18.94842 -14.17679,-0.65647 -19.82732,-18.50615 -20.22631,-31.67316 0,0 -6.77255,44.65986 16.12377,46.70171"/>
+    </svg>
+    <span class="given" aria-hidden="true">
+      <span>朋</span>
+    </span>
+  </h1>
+
+  <script>
+    // パスの長さを測って「まだ書かれていない」状態にしてから描画を開始する
+    const path = document.querySelector('.kuni path');
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    requestAnimationFrame(() => document.body.classList.add('is-drawing'));
+  </script>
+</body>
+</html>
